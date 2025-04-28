@@ -1,0 +1,144 @@
+:root {
+    --primary: #fb6cc0;
+    --secondary: #9b67cd;
+    --dark: #393939;
+    --light-gray: #bcc1ba;
+    --black: #111111;
+    --white: #ffffff;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: var(--white);
+    color: var(--dark);
+    text-align: center;
+    width: 350px;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.title {
+    font-size: 24px;
+    color: var(--primary);
+    font-weight: 600;
+    margin-top: 10px !important;
+}
+
+#login-form {
+    width: 100%;
+    display: block;
+}
+
+.form-label {
+    color: var(--secondary);
+    font-size: 16px;
+    font-weight: 600;
+    display: block;
+    margin-bottom: 5px;
+    margin-top: 13px;
+    text-align: left !important;
+}
+
+.form-input {
+    padding: 10px;
+    width: 95%;
+    border: 2px solid var(--light-gray);
+    border-radius: 6px;
+    background-color: var(--white);
+    color: var(--black);
+    outline: none;
+    font-size: 15px;
+    transition: border 0.3s ease-in-out;
+    display: block;
+    text-align: left !important;
+}
+
+.form-input:hover, 
+.form-input:focus {
+    border: 2px solid var(--primary);
+}
+
+#form-submit {
+    padding: 12px 14px;
+    background-color: var(--primary);
+    color: var(--white);
+    font-size: 15px;
+    font-weight: bold;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    width: 100%;
+    transition: background 0.3s ease-in-out;
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+
+#form-submit:hover {
+    background-color: var(--secondary);
+}
+
+p {
+    margin-top: 20px;
+    font-size: 14px;
+}
+
+p a {
+    color: var(--primary);
+    font-weight: bold;
+    text-decoration: underline;
+    transition: color 0.3s ease-in-out;
+}
+
+p a:hover {
+    color: var(--secondary);
+    text-decoration: underline;
+}
+
+footer {
+    font-size: 14px;
+    color: var(--dark);
+}
+
+footer span {
+    color: var(--primary);
+    font-weight: bold;
+    margin-top: 15%;
+}
+
+#login-div{
+    margin-top: 20px !important;
+    width: 100%;
+}
+
+#form-para{
+    font-size: 15px;
+}
+
+#back-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    padding: 5px;
+    margin-bottom: 15px !important;
+}
+
+#back-button i {
+    font-size: 24px;
+    color: var(--secondary);
+    transition: transform 0.2s ease-in-out;
+}
+
+#back-button:hover i {
+    transform: scale(1.1);
+    color: var(--primary);
+}

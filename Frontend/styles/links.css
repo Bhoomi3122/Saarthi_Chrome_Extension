@@ -1,0 +1,250 @@
+:root {
+    --primary: #fb6cc0;
+    --secondary: #9b67cd;
+    --dark: #393939;
+    --light-gray: #bcc1ba;
+    --black: #111111;
+    --white: #ffffff;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: var(--white);
+    color: var(--dark);
+    text-align: center;
+    width: 400px;
+    padding: 20px;
+    border-radius: 10px;
+    height: 500px !important;
+    overflow-y: auto !important;
+    padding: 0 !important;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden !important;
+}
+.container {
+    flex: 1; /* Prevents expansion */
+    max-height: 100%; /* Ensures it does not exceed body height */
+    overflow-y: auto; /* Enables internal scrolling */
+    width: 100%; /* Ensures full width */
+    padding: 10px; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 10px;
+    overflow-x: hidden !important;
+}
+
+.title {
+    font-size: 22px;
+    color: var(--primary);
+    font-weight: 600;
+    margin-top: 20px;
+}
+
+.add-btn {
+    background: var(--dark);
+    color: var(--white);
+    border: none;
+    padding: 10px 15px;
+    margin-bottom: 15px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: 0.3s;
+}
+
+.add-btn:hover {
+    background: var(--secondary);
+}
+
+.link-name{
+    font-size: 14px;
+}
+.link-list {
+    margin-top: 10px;
+}
+
+.link-card {
+    background: var(--light-gray);
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    transition: 0.3s ease;
+    word-wrap: break-word;
+    width: 85%;
+    margin-left: 3%;
+    max-width: 85vw;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.chevron-btn {
+    background: none;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.card-details {
+    overflow: hidden;
+    height: 0;
+    transition: height 0.4s ease-in-out;
+    margin-top: -5px;
+}
+
+.card-details.show {
+    padding-top: 2px;
+}
+
+.actions {
+    margin-top: 20px;
+    display: flex;
+    gap: 15px;
+    margin-left: 10%;
+}
+
+.action-btn {
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 14px;
+    transition: 0.3s;
+}
+
+.copy-btn {
+    background: var(--dark);
+    color: var(--white);
+}
+
+.copy-btn:hover {
+    background: crimson;
+}
+
+.edit-btn {
+    background: var(--dark);
+    color: var(--white);
+}
+
+.edit-btn:hover {
+    background: crimson;
+}
+
+.delete-btn {
+    background: var(--dark);
+    color: var(--white);
+}
+
+.delete-btn:hover {
+    background: crimson;
+}
+/* Toast Notification */
+.toast-message {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--dark);
+    color: var(--white);
+    padding: 10px 15px;
+    border-radius: 6px;
+    font-size: 14px;
+    opacity: 0;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    z-index: 999;
+}
+
+.toast-message.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(-10px);
+}
+footer {
+    margin-top: 38%;
+    font-size: 14px;
+    color: var(--dark);
+}
+
+footer span {
+    color: var(--primary);
+    font-weight: bold;
+    margin-top: 15%;
+}
+#back-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    padding: 5px;
+    margin-bottom: 15px !important;
+}
+
+#back-button i {
+    font-size: 24px;
+    color: var(--secondary);
+    transition: transform 0.2s ease-in-out;
+}
+
+#back-button:hover i {
+    transform: scale(1.1);
+    color: var(--primary);
+}
+#linkForm {
+    width: 90%;
+    display: block;
+}
+
+.form-label {
+    color: var(--secondary);
+    font-size: 16px;
+    font-weight: 600;
+    display: block;
+    margin-bottom: 8px;
+    margin-top: 13px;
+    text-align: left !important;
+}
+
+.form-input {
+    padding: 10px;
+    width: 90%;
+    border: 2px solid var(--light-gray);
+    border-radius: 6px;
+    background-color: var(--white);
+    color: var(--black);
+    outline: none;
+    font-size: 15px;
+    transition: border 0.3s ease-in-out;
+    display: block;
+    text-align: left !important;
+}
+
+.form-input:hover, 
+.form-input:focus {
+    border: 2px solid var(--primary);
+}
+
+#form-submit {
+    padding: 12px 14px;
+    background-color: var(--primary);
+    color: var(--white);
+    font-size: 15px;
+    font-weight: bold;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    width:  95%;
+    transition: background 0.3s ease-in-out;
+    margin-top: 15px;
+    margin-bottom: 10px;
+    margin-right: 2%;
+}
+
+#form-submit:hover {
+    background-color: var(--secondary);
+}
