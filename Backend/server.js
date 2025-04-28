@@ -1,49 +1,25 @@
 const express = require('express');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
+const dotenv = require('dotenv');
+const mongoose = require('mongoose');
 const cors = require('cors');
-
+const authRoutes = require('./Routes/authRoutes');
 const app = express();
-app.use(express.json());
-app.use(cors());
 
-const users = []; // Store users temporarily (replace with DB later)
-const SECRET_KEY = 'your_secret_key_here';
+// Load environment variables
+dotenv.config();
 
-// Signup API
-app.post('/signup', async (req, res) => {
-    const { email, password } = req.body;
-    const hashedPassword = await bcrypt.hash(password, 10);
-    users.push({ email, password: hashedPassword });
-    res.json({ message: 'Signup successful!' });
-});
+// Middleware
+app.use(express.json()); // For parsing application/json
+app.use(cors()); // For handling CORS issues
 
-// Login API
-app.post('/login', async (req, res) => {
-    const { email, password } = req.body;
-    const user = users.find(u => u.email === email);
-    if (!user) return res.status(400).json({ message: 'Invalid credentials' });
+// Routes
+app.use('/api/auth', authRoutes); // Auth routes for login and register
 
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(400).json({ message: 'Invalid credentials' });
+// Connect to MongoDB
+mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log('Connected to MongoDB'))
+  .catch(err => console.log(err));
 
-    const token = jwt.sign({ email: user.email }, SECRET_KEY, { expiresIn: '2h' });
-    res.json({ token });
-});
-
-// Protected API Example
-app.get('/protected', (req, res) => {
-    const token = req.headers.authorization?.split(' ')[1];
-    if (!token) return res.status(401).json({ message: 'Unauthorized' });
-
-    try {
-        const decoded = jwt.verify(token, SECRET_KEY);
-        res.json({ message: 'Protected data', user: decoded });
-    } catch (err) {
-        res.status(401).json({ message: 'Unauthorized' });
-    }
-});
-
-app.listen(5000, () => {
-    console.log('Backend running on port 5000');
-});
+// Start the server
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
