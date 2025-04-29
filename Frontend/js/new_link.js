@@ -6,23 +6,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const linkURLInput = document.getElementById("linkURL");
     const submitBtn = document.getElementById("submitBtn");
 
-    let isEditMode = false;
-    let editIndex = null;
-
-    // Check if editing mode is active
-    chrome.storage.local.get("editingLink", function (data) {
-        if (data.editingLink) {
-            isEditMode = true;
-            editIndex = data.editingLink.index;
-            linkNameInput.value = data.editingLink.name;
-            linkURLInput.value = data.editingLink.url;
-            submitBtn.innerText = "Update"; // Change button text
-        }
-    });
-
-    // Handle form submission
-    linkForm.addEventListener("submit", function (event) {
-        event.preventDefault(); // Stop form from refreshing
+    // Handle new link creation
+    linkForm.addEventListener("submit", async function (event) {
+        event.preventDefault();
 
         const linkName = linkNameInput.value.trim();
         const linkURL = linkURLInput.value.trim();
@@ -32,26 +18,48 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        chrome.storage.local.get("quickLinks", function (data) {
+        chrome.storage.local.get(["authToken","quickLinks"], async function (data) {
+            const token = data.authToken; // Get token from localStorage
             let links = data.quickLinks || [];
-
-            if (isEditMode && editIndex !== null) {
-                // Update existing link
-                links[editIndex] = { name: linkName, url: linkURL };
-            } else {
-                // Add new link
-                links.push({ name: linkName, url: linkURL });
+            // Check if token is not available
+            if (!token) {
+                showToast("You must be logged in to save links.");
+                return;
             }
 
-            chrome.storage.local.set({ quickLinks: links, editingLink: null }, function () {
-                showToast(isEditMode ? "Link updated successfully!" : "Link saved successfully!", () => {
-                    window.location.href = "links.html"; // Redirect to links page
+            try {
+                const response = await fetch("http://localhost:5000/api/links", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,  // Send token here in the Authorization header
+                    },
+                    body: JSON.stringify({ name: linkName, url: linkURL }),
                 });
-            });
+
+                const result = await response.json();
+
+                if (!response.ok) {
+                    showToast(result.message || "Error saving link");
+                    return;
+                }
+
+                // Add to localStorage
+                links.push(result); // Assuming backend returns saved link object
+                chrome.storage.local.set({ quickLinks: links }, function () {
+                    showToast("Link saved successfully!", () => {
+                        window.location.href = "links.html";
+                    });
+                });
+
+            } catch (err) {
+                console.error("Error posting link:", err.message);
+                showToast("Network error, try again.");
+            }
         });
     });
 
-    // Show Toast Notification
+    // Toast function
     function showToast(message, callback = null) {
         const toast = document.createElement("div");
         toast.classList.add("toast-message");
@@ -66,7 +74,7 @@ document.addEventListener("DOMContentLoaded", function () {
             toast.classList.remove("show");
             setTimeout(() => {
                 toast.remove();
-                if (callback) callback(); // Redirect after toast disappears
+                if (callback) callback();
             }, 300);
         }, 1000);
     }

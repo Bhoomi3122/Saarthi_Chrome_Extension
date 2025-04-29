@@ -7,14 +7,62 @@ document.addEventListener("DOMContentLoaded", function () {
         window.location.href = "new_link.html";
     });
 
-    // Function to load links from Chrome storage
+    // Function to load links from Chrome storage or fetch from the backend
     function loadLinks() {
         chrome.storage.local.get("quickLinks", function (data) {
-            const links = data.quickLinks || [];
-            linkList.innerHTML = ""; // Clear existing links
+            let links = data.quickLinks || [];
 
-            links.forEach((link, index) => createLinkCard(link.name, link.url, index));
+            // If no links in localStorage, fetch from the backend
+            if (links.length === 0) {
+                fetchLinksFromBackend();
+            } else {
+                displayLinks(links);
+            }
         });
+    }
+    const authToken = chrome.storage.local.get("authToken");  // Get token from localStorage
+    
+    if (!authToken) {
+                                alert("You need to be logged in to edit a link.");
+                                return;
+                    }
+    // Function to fetch links from the backend
+    function fetchLinksFromBackend() {
+        fetch("http://localhost:5000/api/links", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${authToken}`, 
+                // You can include the token here if needed
+            }
+        })
+        .then((response) => response.json())
+        .then((data) => {
+            if (data && data.links) {
+                // Store the links in chrome storage if fetched from the backend
+                chrome.storage.local.set({ quickLinks: data.links }, function () {
+                    displayLinks(data.links);
+                });
+            } else {
+                // If no links are found, display message to create new links
+                linkList.innerHTML = "<p>Create new links to appear here.</p>";
+            }
+        })
+        .catch((error) => {
+            console.error("Error fetching links from backend:", error);
+            linkList.innerHTML = "<p>Error loading links. Please try again.</p>";
+        });
+    }
+
+    // Function to display links in the DOM
+    function displayLinks(links) {
+        linkList.innerHTML = ""; // Clear existing links
+        if (links.length === 0) {
+            linkList.innerHTML = "<p>Create new links to appear here.</p>";
+            return;
+        }
+
+        links.forEach((link, index) => createLinkCard(link.name, link.url, index));
     }
 
     // Function to create a link card
@@ -54,7 +102,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (chevronBtn) {
             const index = chevronBtn.dataset.index;
             const detailsElement = document.getElementById(`details-${index}`);
-            const icon = chevronBtn.querySelector("i"); // Get the icon inside button
+            const icon = chevronBtn.querySelector("i");
 
             if (detailsElement.classList.contains("show")) {
                 detailsElement.style.height = `${detailsElement.scrollHeight}px`;
@@ -62,14 +110,14 @@ document.addEventListener("DOMContentLoaded", function () {
                     detailsElement.style.height = "0";
                 });
                 detailsElement.classList.remove("show");
-                icon.classList.replace("bi-chevron-up", "bi-chevron-down"); // ✅ Correct way to toggle icon
+                icon.classList.replace("bi-chevron-up", "bi-chevron-down");
             } else {
                 detailsElement.style.height = "0";
                 detailsElement.classList.add("show");
                 requestAnimationFrame(() => {
                     detailsElement.style.height = `${detailsElement.scrollHeight}px`;
                 });
-                icon.classList.replace("bi-chevron-down", "bi-chevron-up"); // ✅ Correct way to toggle icon
+                icon.classList.replace("bi-chevron-down", "bi-chevron-up");
 
                 detailsElement.addEventListener(
                     "transitionend",
@@ -90,55 +138,150 @@ document.addEventListener("DOMContentLoaded", function () {
         if (copyBtn) {
             const url = copyBtn.dataset.url;
             navigator.clipboard.writeText(url).then(() => {
-                copyBtn.innerHTML = `<i class="bi bi-clipboard"></i> Copied!`; // ✅ Change text to "Copied!"
+                copyBtn.innerHTML = `<i class="bi bi-clipboard"></i> Copied!`;
 
-                showToast("Link copied!"); // ✅ Show toast message
+                showToast("Link copied!");
 
                 setTimeout(() => {
-                    copyBtn.innerHTML = `<i class="bi bi-clipboard"></i> Copy`; // ✅ Restore text after 1.5s
+                    copyBtn.innerHTML = `<i class="bi bi-clipboard"></i> Copy`;
                 }, 1500);
             });
         }
     });
 
-
     // Delete Link
     linkList.addEventListener("click", (e) => {
         if (e.target.closest(".delete-btn")) {
             const index = e.target.closest(".delete-btn").dataset.index;
+    
             chrome.storage.local.get("quickLinks", (data) => {
                 let links = data.quickLinks || [];
-                links.splice(index, 1); // Remove the link
-                chrome.storage.local.set({ quickLinks: links }, loadLinks); // Update storage and reload
+                const linkToDelete = links[index];
+    
+                if (linkToDelete) {
+                    chrome.storage.local.get("authToken", (authData) => {
+                        const token = authData.authToken;
+    
+                        if (!token) {
+                            alert("You need to be logged in to delete a link.");
+                            return;
+                        }
+    
+                        fetch(`http://localhost:5000/api/links/${linkToDelete._id}`, {
+                            method: "DELETE",
+                            headers: {
+                                "Content-Type": "application/json",
+                                "Authorization": `Bearer ${token}`,
+                            },
+                        })
+                        .then(async (response) => {
+                            const resData = await response.json();
+    
+                            if (response.ok && resData.message === "Link deleted successfully") {
+                                // Delete from localStorage only if backend deletion was successful
+                                links.splice(index, 1);
+                                chrome.storage.local.set({ quickLinks: links }, function () {
+                                    showToast("Link deleted from both backend and localStorage.");
+                                    loadLinks();
+                                });
+                            } else if (response.status === 404 && resData.error === "Link not found or unauthorized") {
+                                // Backend says link not found, but check localStorage
+                                if (links[index]) {
+                                    links.splice(index, 1);
+                                    chrome.storage.local.set({ quickLinks: links }, function () {
+                                        showToast("Link not found in backend, but deleted from localStorage.");
+                                        loadLinks();
+                                    });
+                                } else {
+                                    showToast("Link not found in backend or localStorage.");
+                                }
+                            } else {
+                                console.warn("Unexpected response:", resData);
+                                showToast("Unexpected error while deleting the link.");
+                            }
+                        })
+                        .catch((error) => {
+                            console.error("Error deleting link from backend:", error);
+                            showToast("Error deleting link.");
+                        });
+                    });
+                }
             });
         }
     });
-
+    
+    
+    
     // Edit Link Logic
     linkList.addEventListener("click", (e) => {
         const editBtn = e.target.closest(".edit-btn");
         if (editBtn) {
             const index = editBtn.dataset.index;
-
-            // Retrieve the link details
+    
             chrome.storage.local.get("quickLinks", function (data) {
                 let links = data.quickLinks || [];
                 let linkToEdit = links[index];
-
+    
                 if (linkToEdit) {
-                    // Store link temporarily in storage with its index
                     chrome.storage.local.set(
                         { editingLink: { ...linkToEdit, index } },
                         function () {
-                            // Redirect to new_link.html for editing
-                            window.location.href = "new_link.html?edit=true";
+                            // Send PUT request to backend to update the link
+                            const authToken = chrome.storage.local.get("authToken");  // Get token from localStorage
+    
+                            if (!authToken) {
+                                alert("You need to be logged in to edit a link.");
+                                return;
+                            }
+    
+                            fetch(`/api/links/${index}`, {
+                                method: "PUT",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                    "Authorization": `Bearer ${authToken}`,  // Attach token as Bearer token
+                                },
+                                body: JSON.stringify({
+                                    name: linkToEdit.name,
+                                    url: linkToEdit.url,
+                                }),
+                            })
+                            .then((response) => response.json())
+                            .then((data) => {
+                                if (data.success) {
+                                    window.location.href = "new_link.html?edit=true";  // Redirect to edit page
+                                } else {
+                                    alert("Failed to update link.");
+                                }
+                            })
+                            .catch((error) => {
+                                console.error("Error updating link:", error);
+                                alert("Error updating link.");
+                            });
                         }
                     );
                 }
             });
         }
     });
-
+    
     // Load links on page load
     loadLinks();
 });
+function showToast(message, callback = null) {
+    const toast = document.createElement("div");
+    toast.classList.add("toast-message");
+    toast.innerText = message;
+    document.body.appendChild(toast);
+
+    setTimeout(() => {
+        toast.classList.add("show");
+    }, 100);
+
+    setTimeout(() => {
+        toast.classList.remove("show");
+        setTimeout(() => {
+            toast.remove();
+            if (callback) callback(); // Redirect after toast disappears
+        }, 300);
+    }, 1000);
+}

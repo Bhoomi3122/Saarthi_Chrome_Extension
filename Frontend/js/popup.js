@@ -13,26 +13,6 @@ document.addEventListener('DOMContentLoaded', async function () {
       document.getElementById('dashboard-section').style.display = 'none';
     }
   
-    // Handle Login Form Submission
-    const loginForm = document.getElementById('login-form');
-    loginForm.addEventListener('submit', async function (event) {
-      event.preventDefault();
-  
-      const email = document.getElementById('email').value.trim();
-      const password = document.getElementById('password').value.trim();
-  
-      if (email && password) {
-        // 👉 Here you should ideally verify login (API call etc.)
-        // For now let's simulate successful login:
-        await chrome.storage.local.set({ authToken: 'dummy_auth_token' });
-  
-        // Refresh popup to show dashboard
-        window.location.reload();
-      } else {
-        showToast('Please enter both email and password.');
-      }
-    });
-  
     // Handle Logout Button Click
     const logoutButton = document.getElementById('auth-buttons');
     if (logoutButton) {
