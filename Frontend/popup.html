@@ -1,55 +1,85 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Saarthi - Your Study Companion</title>
-    <link rel="stylesheet" href="styles/popup.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Saarthi - Your Study Companion</title>
+
+  <!-- All stylesheets -->
+
+  <link rel="stylesheet" href="styles/popup.css">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 
 <body>
-    <div class="container">
-        <h1 class="title">Saarthi</h1>
-        <p class="subtitle">Your Smart Study Companion</p>
+  <div class="container">
 
-        <div class="card-container">
-            <a href="html/links.html" class="card-wrapper">
-                <div class="card card-front">Quick Links</div>
-                <div class="card card-back">
-                    <p>Manage and access useful links easily.</p>
-                </div>
-            </a>
-            
-            <a href="html/notes.html" class="card-wrapper">
-                <div class="card card-front">Notes</div>
-                <div class="card card-back">
-                    <p>Save important notes for quick reference.</p>
-                </div>
-            </a>
-            <a href="html/focus.html" class="card-wrapper">
-                <div class="card card-front">Focus Mode</div>
-                <div class="card card-back">
-                    <p>Block distracting notifications & apps.</p>
-                </div>
-            </a>
-            
-            <a href="html/timer.html" class="card-wrapper">
-                <div class="card card-front">Smart Timer</div>
-                <div class="card card-back">
-                    <p>Use a timer to manage your sessions.</p>
-                </div>
-            </a>
-        </div>
+    <!-- Common Title -->
+    <h1 class="title">Saarthi</h1>
+    <!-- LOGIN Section -->
+    <div id="login-section" style="display: none;">
+      <p class="subtitle">Your Smart Study Companion</p>
+      <form id="login-form">
+        <label for="email" class="form-label">Enter email:</label>
+        <input type="email" id="email" placeholder="Enter email" name="email" class="form-input" required>
 
-        <div class="auth-buttons">
-            <a href="html/login.html">Login</a>
-            <a href="html/signup.html">Signup</a>
-        </div>
+        <label for="password" class="form-label">Enter password:</label>
+        <input type="password" id="password" placeholder="Enter password" name="password" class="form-input" required>
 
-        <footer>Designed by: <span>Bhoomi Garg</span></footer>
+        <button type="submit" id="form-submit">Login</button>
+      </form>
+
+      <p id="form-para">Don't have an account?
+        <a href="html/signup.html">Signup</a>
+      </p>
     </div>
 
-</body>
+    <!-- DASHBOARD Section -->
+    <div id="dashboard-section" style="display: none;">
+      <p class="subtitle">Your Smart Study Companion</p>
 
+      <div class="card-container">
+        <a href="html/links.html" class="card-wrapper">
+          <div class="card card-front">Quick Links</div>
+          <div class="card card-back">
+            <p>Manage and access useful links easily.</p>
+          </div>
+        </a>
+
+        <a href="html/notes.html" class="card-wrapper">
+          <div class="card card-front">Notes</div>
+          <div class="card card-back">
+            <p>Save important notes for quick reference.</p>
+          </div>
+        </a>
+
+        <a href="html/focus.html" class="card-wrapper">
+          <div class="card card-front">Focus Mode</div>
+          <div class="card card-back">
+            <p>Block distracting notifications & apps.</p>
+          </div>
+        </a>
+
+        <a href="html/timer.html" class="card-wrapper">
+          <div class="card card-front">Smart Timer</div>
+          <div class="card card-back">
+            <p>Use a timer to manage your sessions.</p>
+          </div>
+        </a>
+      </div>
+
+      <!-- Logout Button (optional good practice) -->
+      <button id="auth-buttons">Logout</button>
+    </div>
+
+    <footer>Designed by: <span>Bhoomi Garg</span></footer>
+
+  </div>
+
+  <!-- JS -->
+  <script src="js/popup.js"></script>
+  <script src="js/back.js"></script> <!-- if back.js is needed -->
+  <script src="js/auth.js"></script>
+</body>
 </html>

@@ -2,7 +2,28 @@
 
 body{
     height: 550px !important;
+    width: 480px;
 }
 .form-input{
     margin-bottom: 10px;
+}
+/* Style for the toast notification */
+.toast-message {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--dark);
+    color: var(--white);
+    padding: 10px 15px;
+    border-radius: 6px;
+    font-size: 14px;
+    opacity: 0;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    z-index: 999;
+}
+
+.toast-message.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(-10px);
 }

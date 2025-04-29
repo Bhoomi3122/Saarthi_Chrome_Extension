@@ -17,10 +17,10 @@
         <h1 class="title">Saarthi</h1>
         <div id="login-div">
             
-            <form id="login-form">
-                <label for="username" class="form-label">Enter name:</label></form>
-                <input type="text" placeholder="Enter name" name="username" class="form-input"/>
-                <label for="email" class="form-label">Enter email:</label></form>
+            <form id="register-form">
+                <label for="name" class="form-label">Enter name:</label>
+                <input type="text" placeholder="Enter name" name="name" class="form-input"/>
+                <label for="email" class="form-label">Enter email:</label>
                 <input type="email" placeholder="Enter email" name="email" class="form-input"/>
                 <label for="password" class="form-label">Enter password:</label>
                 <input type="password" placeholder="Enter password" name="password" class="form-input"/>
@@ -32,6 +32,10 @@
         <p id="form-para">Already have an account?<a href="../html/login.html">  Login</a></p>
         <footer>Designed by: <span>Bhoomi Garg</span></footer>
     </div>
+    <div id="toast" class="toast">
+        <span id="toast-message"></span>
+    </div>
     <script src="../js/back.js"></script>
+    <script src="../js/auth.js"></script>
 </body>
 </html>
