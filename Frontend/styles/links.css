@@ -199,6 +199,10 @@ footer span {
     width: 90%;
     display: block;
 }
+#editForm{
+    width: 90%;
+    display: block;
+}
 
 .form-label {
     color: var(--secondary);

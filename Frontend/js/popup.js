@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     const logoutButton = document.getElementById('auth-buttons');
     if (logoutButton) {
       logoutButton.addEventListener('click', async function () {
-        await chrome.storage.local.remove('authToken');
+        await chrome.storage.local.remove(['authToken']);
         // Refresh popup to go back to login
         window.location.reload();
       });

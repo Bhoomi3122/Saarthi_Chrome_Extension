@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Link</title>
+    <title>Edit Link</title>
     <link rel="stylesheet" href="../styles/links.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
@@ -12,20 +12,20 @@
         <button id="back-button">
             <i class="fa-solid fa-arrow-left"></i>
         </button>
-        <h1 class="title">Add New Link</h1>
-        <form id="linkForm">
+        <h1 class="title">Edit Link</h1>
+        <form id="editForm">
             <label for="linkname" class="form-label">Enter Name:</label>
             <input type="text" id="linkName" placeholder="Enter Link Name" name="linkname" class="form-input" required>
             <label for="linkurl" class="form-label"
             >Enter URL:</label>
             <input type="url" id="linkURL" placeholder="Enter URL"  name="linkurl" class="form-input" required>
-            <button type="submit" id="form-submit">Save Link</button>
+            <button type="submit" id="form-submit">Update Link</button>
         </form>
         <footer>Designed by: <span>Bhoomi Garg</span></footer>
     </div>
     
     
-    <script type="module" src="../js/new_link.js"></script>
+    <script type="module" src="../js/edit.js"></script>
     <script src="../js/back.js"></script>
 </body>
 </html>

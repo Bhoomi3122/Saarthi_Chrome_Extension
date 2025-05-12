@@ -33,27 +33,42 @@ exports.createLink = async (req, res) => {
 exports.getLinks = async (req, res) => {
     try {
         const links = await Link.find({ user: req.user.id });
-        res.json(links);
+        res.json({ links }); // ✅ Wrap the array in a key named "links"
     } catch (err) {
         res.status(500).json({ error: "Failed to fetch links" });
     }
 };
 
+
 // Update link
+// In your backend (Node.js/Express)
 exports.updateLink = async (req, res) => {
     try {
+        const linkId = req.params.id;
         const { name, url } = req.body;
-        const updated = await Link.findOneAndUpdate(
-            { _id: req.params.id, user: req.user.id },
+
+        if (!name || !url) {
+            return res.status(400).json({ error: "Name and URL are required." });
+        }
+
+        // Find the link by its ID and user ID, then update it
+        const updatedLink = await Link.findOneAndUpdate(
+            { _id: linkId, user: req.user.id },
             { name, url },
-            { new: true }
+            { new: true } // Return the updated document
         );
-        if (!updated) return res.status(404).json({ error: "Link not found or unauthorized" });
-        res.json(updated);
+
+        if (!updatedLink) {
+            return res.status(404).json({ error: "Link not found or unauthorized" });
+        }
+
+        res.json({ success: true, message: "Link updated successfully" });
     } catch (err) {
+        console.error(err);
         res.status(500).json({ error: "Failed to update link" });
     }
 };
+
 
 // Delete link
 exports.deleteLink = async (req, res) => {

@@ -32,30 +32,33 @@ document.addEventListener("DOMContentLoaded", function () {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`,  // Send token here in the Authorization header
+                        Authorization: `Bearer ${token}`,
                     },
                     body: JSON.stringify({ name: linkName, url: linkURL }),
                 });
-
-                const result = await response.json();
-
-                if (!response.ok) {
-                    showToast(result.message || "Error saving link");
-                    return;
-                }
-
-                // Add to localStorage
-                links.push(result); // Assuming backend returns saved link object
-                chrome.storage.local.set({ quickLinks: links }, function () {
-                    showToast("Link saved successfully!", () => {
-                        window.location.href = "links.html";
+            
+                const data = await response.json(); // ✅ Parse the response JSON
+                console.log(data);
+                if (data && data._id && data.user) {
+                    chrome.storage.local.get("quickLinks", function (result) {
+                        const quickLinks = result.quickLinks || [];
+                        quickLinks.push({ _id: data._id,
+                            name: data.name,
+                            url: data.url,
+                            user: data.user,}); // ✅ Now data includes the _id from backend
+                        chrome.storage.local.set({ quickLinks }, function () {
+                            showToast("Link saved successfully.");
+                            window.location.href = "links.html";
+                        });
                     });
-                });
-
+                } else {
+                    showToast("Failed to save link.");
+                }
             } catch (err) {
                 console.error("Error posting link:", err.message);
                 showToast("Network error, try again.");
             }
+            
         });
     });
 
