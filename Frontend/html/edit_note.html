@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Note</title>
+    <link rel="stylesheet" href="../styles/notes.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <button id="back-button">
+            <i class="fa-solid fa-arrow-left"></i>
+        </button>
+        <h1 class="title">Edit Note</h1>
+        <form id="editForm">
+            <label for="noteTitle" class="form-label">Enter Title:</label>
+            <input type="text" id="noteTitle" placeholder="Enter Note Title" name="noteTitle" class="form-input" required>
+            
+            <label for="noteContent" class="form-label">Enter Content:</label>
+            <textarea id="noteContent" placeholder="Enter Note Content" name="noteContent" class="form-input" required></textarea>
+            
+            <button type="submit" id="form-submit">Update Note</button>
+        </form>
+        <footer>Designed by: <span>Bhoomi Garg</span></footer>
+    </div>
+    
+    <script type="module" src="../js/editNote.js"></script>
+    <script src="../js/back.js"></script>
+</body>
+</html>

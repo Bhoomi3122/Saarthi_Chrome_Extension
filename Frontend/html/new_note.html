@@ -15,13 +15,15 @@
         </button>  
         <h1 class="title">Add a New Note</h1>
         <form id="noteForm">
-            <input type="text" id="noteTitle" placeholder="Title" required>
-            <textarea id="noteContent" placeholder="Description" required></textarea>
-            <button type="submit">Save Note</button>
+            <label for="noteTitle" class="form-label">Enter Title:</label>
+            <input type="text" id="noteTitle" placeholder="Title" name="noteTitle" class="form-input" required>
+            <label for="noteDescription" class="form-label">Enter Description:</label>
+            <textarea id="noteContent" placeholder="Description" name="noteDescription" class="form-input" rows="11" cols="20"></textarea>
+            <button type="submit" id="form-submit">Save Note</button>
         </form>
     </div>
 
     <script src="../js/back.js"></script>
-    <script src="../js/notes.js"></script>
+    <script src="../js/new_note.js"></script>
 </body>
 </html>
