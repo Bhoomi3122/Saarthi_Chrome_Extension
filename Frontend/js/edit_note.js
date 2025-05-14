@@ -54,30 +54,21 @@ document.addEventListener("DOMContentLoaded", () => {
                 },
                 body: JSON.stringify({
                     title: noteTitle,
-                    content: noteContent,
+                    description: noteContent,
                 }),
             })
             .then((response) => response.json())
             .then((data) => {
-                if (data.success) {
-                    // Update local storage with the new note details
-                    chrome.storage.local.get("notes", (data) => {
-                        const notes = data.notes || [];
-                        const noteIndex = notes.findIndex(note => note._id === noteId);
-                        if (noteIndex !== -1) {
-                            notes[noteIndex] = { _id: noteId, title: noteTitle, content: noteContent }; // Update the note details
-                            chrome.storage.local.set({ notes: notes }, function () {
-                                showToast("Note updated successfully.");
-                                // Redirect back to the notes page
-                                window.location.href = "notes.html";
-                            });
-                        }
-                    });
-                } else {
-                    console.error("Backend failed to update the note:", data);
-                    showToast("Failed to update note.");
-                }
-            })
+    if (data.success) {
+        showToast("Note updated successfully.", () => {
+            // Redirect to the notes page after a successful update
+            window.location.href = "../html/notes.html";
+        });
+    } else {
+        console.error("Backend failed to update the note:", data);
+        showToast("Failed to update note.");
+    }
+})
             .catch((error) => {
                 console.error("Error updating note:", error);
                 showToast("Error updating note.");
